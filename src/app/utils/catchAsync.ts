@@ -1,0 +1,11 @@
+/* eslint-disable @typescript-eslint/consistent-type-imports */
+import { NextFunction, Request, RequestHandler, Response } from 'express';
+
+//higher order function
+const catchAsync = (fn: RequestHandler) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch((err) => next(err));
+  };
+};
+
+export default catchAsync;
