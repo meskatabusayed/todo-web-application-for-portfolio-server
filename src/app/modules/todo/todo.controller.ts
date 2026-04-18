@@ -8,7 +8,7 @@ import sendResponse from '../../utils/sendResponse';
 import status from 'http-status';
 
 const createTodo = catchAsync(async (req, res) => {
-  const { todo: todoData } = req.body;
+  const  todoData = req.body;
   const result = await todoServices.createTodoIntoDB(todoData);
   sendResponse(res, {
     statusCode: status.OK,

@@ -13,8 +13,8 @@ app.use(express.json());
 app.use(cors());
 
 //application router
-app.use('/api/v1/todos', todoRouters);
-app.use('/api/v1/users', userRouter);
+app.use('/api/v1', );
+
 
 app.get('/', (req, res) => {
   res.send('Hello World! from todo');
