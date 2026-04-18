@@ -1,11 +1,17 @@
+/* eslint-disable import/order */
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable prettier/prettier */
 
+import generateId from '../counter/counter.utils';
 import { TUser } from './user.interface';
 import { UserModel } from './user.model';
 
 const createUserIntoDB = async (userData: TUser) => {
-  const result = await UserModel.create(userData);
+  const id = await generateId('user' , 'us');
+  const result = await UserModel.create({
+    ...userData,
+    id
+  });
   return result;
 };
 

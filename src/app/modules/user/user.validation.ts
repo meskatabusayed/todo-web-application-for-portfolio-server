@@ -3,8 +3,6 @@ import { z } from 'zod';
 
 export const createUserValidationSchema = z.object({
   body: z.object({
-    id: z.string().min(1, 'User ID is required'),
-
     name: z
       .string()
       .min(2, 'Name must be at least 2 characters long')

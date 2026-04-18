@@ -1,10 +1,17 @@
+/* eslint-disable import/order */
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable prettier/prettier */
+import generateId from '../counter/counter.utils';
 import { TTodo } from './todo.interface';
 import { TodoModel } from './todo.model';
 
+
 const createTodoIntoDB = async (payload: TTodo) => {
-  const result = await TodoModel.create(payload);
+  const id = await generateId("todo" , "td");
+  const result = await TodoModel.create({
+    ...payload,
+    id
+  });
   return result;
 };
 

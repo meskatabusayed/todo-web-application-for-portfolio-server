@@ -8,5 +8,6 @@ const router = express.Router();
 router.post('/create-user', userControllers.createUser);
 router.get('/', userControllers.getAllUser);
 router.get('/:id', userControllers.getSingleUser);
-
+router.patch('/:userId' , userControllers.updateUser);
+router.delete('/:userId' , userControllers.deleteUser);
 export const userRouter = router;

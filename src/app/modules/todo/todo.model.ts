@@ -4,13 +4,13 @@
 import { model, Schema } from 'mongoose';
 import { TTodo } from './todo.interface';
 
+
 const todoSchema = new Schema<TTodo>(
   {
     id: {
       type: String,
       required: [true, 'Todo ID is required'],
       unique: true,
-      trim: true,
     },
 
     title: {
@@ -44,5 +44,8 @@ const todoSchema = new Schema<TTodo>(
     timestamps: true,
   },
 );
+
+
+
 
 export const TodoModel = model<TTodo>('Todo', todoSchema);
