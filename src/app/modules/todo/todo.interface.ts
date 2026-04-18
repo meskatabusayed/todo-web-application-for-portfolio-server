@@ -5,6 +5,7 @@ export type TTodo = {
   title: string;
   description?: string;
   status: 'pending' | 'completed';
+  isDeleted : boolean;
   createdAt?: Date;
   updatedAt?: Date;
 };

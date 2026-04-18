@@ -35,6 +35,10 @@ const todoSchema = new Schema<TTodo>(
       },
       default: 'pending',
     },
+    isDeleted: {
+    type: Boolean,
+    default: false,
+  },
   },
   {
     timestamps: true,

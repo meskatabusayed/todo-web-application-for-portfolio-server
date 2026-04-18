@@ -34,12 +34,45 @@ const getSingleTodo = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
-    message: 'Todo mis Retrieve successfully',
+    message: 'Todo  Retrieve successfully',
     data: result,
   });
 });
+
+const updateTodo = catchAsync(async (req, res) => {
+  const { todoId } = req.params; 
+      
+  const payload = req.body;  
+    
+
+  const result = await todoServices.updateTodoInDB(todoId as string, payload);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'Todo updated successfully',
+    data: result,
+  });
+});
+
+const deleteTodo = catchAsync(async (req, res) => {
+  const { todoId } = req.params;
+
+  const result = await todoServices.deleteTodoFromDB(todoId as string);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'Todo deleted successfully',
+    data: result,
+  });
+});
+
+
 export const todoControllers = {
   createTodo,
   getAllTodo,
   getSingleTodo,
+  updateTodo,
+  deleteTodo
 };
