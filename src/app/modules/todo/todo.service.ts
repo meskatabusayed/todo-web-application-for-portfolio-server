@@ -1,18 +1,44 @@
 /* eslint-disable import/order */
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable prettier/prettier */
+import mongoose from 'mongoose';
 import generateId from '../counter/counter.utils';
 import { TTodo } from './todo.interface';
 import { TodoModel } from './todo.model';
 
 
 const createTodoIntoDB = async (payload: TTodo) => {
-  const id = await generateId("todo" , "td");
-  const result = await TodoModel.create({
-    ...payload,
-    id
-  });
-  return result;
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    // Step 1: Generate ID
+    const id = await generateId("todo", "td" , session);
+
+    // Step 2: Create Todo inside transaction
+    const result = await TodoModel.create(
+      [
+        {
+          ...payload,
+          id,
+        },
+      ],
+      { session }
+    );
+
+    // Step 3: Commit
+    await session.commitTransaction();
+    session.endSession();
+
+    return result[0];
+  } catch (error) {
+    // Rollback
+    await session.abortTransaction();
+    session.endSession();
+
+    throw error;
+  }
 };
 
 const getAllTodosFromDB = async () => {

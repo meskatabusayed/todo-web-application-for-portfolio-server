@@ -1,18 +1,42 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/order */
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable prettier/prettier */
 
+import mongoose from 'mongoose';
 import generateId from '../counter/counter.utils';
 import { TUser } from './user.interface';
 import { UserModel } from './user.model';
 
 const createUserIntoDB = async (userData: TUser) => {
-  const id = await generateId('user' , 'us');
-  const result = await UserModel.create({
-    ...userData,
-    id
-  });
-  return result;
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    // same session pass
+    const id = await generateId("user", "us", session);
+
+    const result = await UserModel.create(
+      [
+        {
+          ...userData,
+          id,
+        },
+      ],
+      { session }
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return result[0];
+  } catch (error) {
+    await session.abortTransaction(); // rollback
+    session.endSession();
+
+    throw error;
+  }
 };
 
 const getAllUserFromDB = async () => {
