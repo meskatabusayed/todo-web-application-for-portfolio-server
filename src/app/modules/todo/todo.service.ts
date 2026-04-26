@@ -5,6 +5,8 @@ import mongoose from 'mongoose';
 import generateId from '../counter/counter.utils';
 import { TTodo } from './todo.interface';
 import { TodoModel } from './todo.model';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { todoSearchFields } from './todo.constant';
 
 
 const createTodoIntoDB = async (payload: TTodo) => {
@@ -41,8 +43,20 @@ const createTodoIntoDB = async (payload: TTodo) => {
   }
 };
 
-const getAllTodosFromDB = async () => {
-  const result = await TodoModel.find();
+const getAllTodosFromDB = async (query: Record<string, unknown>) => {
+  const queryBuilder = new QueryBuilder(
+    TodoModel.find(),
+    query
+  );
+
+  const result = await queryBuilder
+    .search(todoSearchFields) 
+    .filter()
+    .sort()
+    .paginate()
+    .fields()
+    .modelQuery;
+
   return result;
 };
 

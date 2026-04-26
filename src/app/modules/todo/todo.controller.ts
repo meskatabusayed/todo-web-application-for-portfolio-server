@@ -19,7 +19,7 @@ const createTodo = catchAsync(async (req, res) => {
 });
 
 const getAllTodo = catchAsync(async (req, res) => {
-  const result = await todoServices.getAllTodosFromDB();
+  const result = await todoServices.getAllTodosFromDB(req.query);
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
