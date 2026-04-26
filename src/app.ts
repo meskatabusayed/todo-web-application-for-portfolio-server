@@ -2,8 +2,6 @@
 /* eslint-disable import/order */
 import cors from 'cors';
 import express from 'express';
-import { todoRouters } from './app/modules/todo/todo.route';
-import { userRouter } from './app/modules/user/user.route';
 import globalErrorHandler from './app/middlewares/globalErrorHandlers';
 import notFound from './app/middlewares/notfound';
 import router from './app/routes';
