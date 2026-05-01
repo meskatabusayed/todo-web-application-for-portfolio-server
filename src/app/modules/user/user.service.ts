@@ -5,10 +5,10 @@
 
 import mongoose from 'mongoose';
 import generateId from '../counter/counter.utils';
-import { TUser } from './user.interface';
+import { IUser } from './user.interface';
 import { UserModel } from './user.model';
 
-const createUserIntoDB = async (userData: TUser) => {
+const createUserIntoDB = async (userData: IUser) => {
   const session = await mongoose.startSession();
 
   try {
@@ -39,6 +39,41 @@ const createUserIntoDB = async (userData: TUser) => {
   }
 };
 
+const createAdminIntoDB = async (userData: IUser) => {
+  const session = await mongoose.startSession();
+
+  try {
+    let createdUser;
+
+    await session.withTransaction(async () => {
+      const adminData = {
+        ...userData,
+        role: "admin",
+      };
+
+      const id = await generateId("admin", "ad", session);
+
+      const result = await UserModel.create(
+        [
+          {
+            ...adminData,
+            id,
+          },
+        ],
+        { session }
+      );
+
+      createdUser = result[0];
+    });
+
+    return createdUser;
+  } catch (error : any) {
+    throw new Error(error);
+  } finally {
+    session.endSession(); 
+  }
+};
+
 const getAllUserFromDB = async () => {
   const result = await UserModel.find();
   return result;
@@ -49,7 +84,7 @@ const getSingleUserFromDB = async (id: any) => {
   return result;
 };
 
-const updateUserInDB = async (id: string, payload: TUser) => {
+const updateUserInDB = async (id: string, payload: IUser) => {
   const result = await UserModel.findOneAndUpdate(
     { _id :  id },          
     payload,         
@@ -70,8 +105,10 @@ const deleteUserFromDB = async (id: string) => {
 
 export const userServices = {
   createUserIntoDB,
+  createAdminIntoDB,
   getAllUserFromDB,
   getSingleUserFromDB,
   updateUserInDB,
   deleteUserFromDB,
+
 };

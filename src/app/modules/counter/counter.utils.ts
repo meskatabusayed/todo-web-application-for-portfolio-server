@@ -12,7 +12,7 @@ const generateId = async (payload : string , idValue : string , session: any ) =
   );
 
   const number = counter.seq.toString().padStart(4, '0');
-  return `mas-${idValue }-${number}`;
+  return `${payload}-${idValue }-${number}`;
 };
 
 export default generateId;

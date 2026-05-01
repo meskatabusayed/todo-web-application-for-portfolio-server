@@ -17,6 +17,16 @@ const createUser = catchAsync(async (req, res) => {
   });
 });
 
+const createAdmin = catchAsync(async (req, res) => {
+  const result = await userServices.createAdminIntoDB(req.body);
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'Admin created successfully',
+    data: result,
+  });
+});
+
 const getAllUser = catchAsync(async (req, res) => {
   const result = await userServices.getAllUserFromDB();
   sendResponse(res, {
@@ -67,6 +77,7 @@ const deleteUser = catchAsync(async (req, res) => {
 
 export const userControllers = {
   createUser,
+  createAdmin,
   getAllUser,
   getSingleUser,
   updateUser,

@@ -2,11 +2,11 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable prettier/prettier */
 import { Schema, model } from 'mongoose';
-import { TUser } from './user.interface';
+import { IUser, UserModelType } from './user.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config';
 
-const userSchema = new Schema<TUser>(
+const userSchema = new Schema<IUser , UserModelType>(
   {
     id: {
       type: String,
@@ -68,4 +68,35 @@ userSchema.pre('save', async function () {
   this.password = await bcrypt.hash(this.password, Number(config.bcrypt_salt_rounds));
 });
 
-export const UserModel = model<TUser>('User', userSchema);
+//custom ID check
+userSchema.statics.isUserExistByCustomID = async function (id: string) {
+  return await this.findOne({ id }).select("+password");
+};
+
+//isActive check
+userSchema.statics.isUserDeActive = async function (id: string) {
+  const user = await this.findOne({ id });
+
+  if (!user) return false;
+
+  return user.isActive === false;
+};
+
+//delete
+userSchema.statics.isUserDeleted = async function (id: string) {
+  const user = await this.findOne({ id });
+
+  if (!user) return false;
+
+  return user.isDeleted === true;
+};
+
+//password Match
+userSchema.statics.isPasswordMatched = async function (
+  plainTextPassword: string,
+  hashedPassword: string
+) {
+  return await bcrypt.compare(plainTextPassword, hashedPassword);
+};
+
+export const UserModel = model<IUser , UserModelType>('User', userSchema);
