@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/order */
 /* eslint-disable @typescript-eslint/consistent-type-imports */
@@ -43,9 +44,7 @@ const createAdminIntoDB = async (userData: IUser) => {
   const session = await mongoose.startSession();
 
   try {
-    let createdUser;
-
-    await session.withTransaction(async () => {
+    session.startTransaction();
       const adminData = {
         ...userData,
         role: "admin",
@@ -54,24 +53,20 @@ const createAdminIntoDB = async (userData: IUser) => {
       const id = await generateId("admin", "ad", session);
 
       const result = await UserModel.create(
-        [
-          {
-            ...adminData,
-            id,
-          },
-        ],
+        [{ ...adminData, id }],
         { session }
       );
 
-      createdUser = result[0];
-    });
+    await session.commitTransaction();
+    session.endSession();
 
-    return createdUser;
-  } catch (error : any) {
-    throw new Error(error);
-  } finally {
-    session.endSession(); 
-  }
+    return result[0];
+
+  } catch (error: any) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error; 
+  } 
 };
 
 const getAllUserFromDB = async () => {

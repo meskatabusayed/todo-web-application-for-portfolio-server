@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/order */
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable prettier/prettier */
@@ -67,6 +68,7 @@ userSchema.pre('save', async function () {
 
   this.password = await bcrypt.hash(this.password, Number(config.bcrypt_salt_rounds));
 });
+
 
 //custom ID check
 userSchema.statics.isUserExistByCustomID = async function (id: string) {

@@ -19,6 +19,7 @@ const createUser = catchAsync(async (req, res) => {
 
 const createAdmin = catchAsync(async (req, res) => {
   const result = await userServices.createAdminIntoDB(req.body);
+  console.log("result" , result);
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
