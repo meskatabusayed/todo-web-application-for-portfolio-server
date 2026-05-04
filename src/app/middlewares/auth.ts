@@ -14,10 +14,8 @@ import { UserModel } from '../modules/user/user.model';
 
 
 const auth = (...requiredRoles: TUserRole[]) => {
-  //console.log("roles" , ...requiredRoles)
   
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    console.log("req" , req.headers.authorization);
     const token = req.headers.authorization;
     if (!token) {
       throw new AppError(status.UNAUTHORIZED, 'You are Not Authorized');
