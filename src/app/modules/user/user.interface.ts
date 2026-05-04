@@ -23,5 +23,6 @@ export interface UserModelType extends Model<IUser> {
   isUserDeActive(id: string): Promise<boolean>;
   isUserDeleted(id : string) : Promise<boolean>;
   isPasswordMatched(plainTextPassword : string , hashedPassword : string) : Promise<boolean>;
+  isJWTIssuedBeforePasswordChanged(passwordChangedTimestamp : Date , jwtIssuedTimestamp: number) : boolean;
 
 }

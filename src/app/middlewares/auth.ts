@@ -14,7 +14,10 @@ import { UserModel } from '../modules/user/user.model';
 
 
 const auth = (...requiredRoles: TUserRole[]) => {
+  //console.log("roles" , ...requiredRoles)
+  
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    console.log("req" , req.headers.authorization);
     const token = req.headers.authorization;
     if (!token) {
       throw new AppError(status.UNAUTHORIZED, 'You are Not Authorized');
@@ -26,11 +29,11 @@ const auth = (...requiredRoles: TUserRole[]) => {
     ) as JwtPayload;
    
 
-    const {role , userId , iat} = decode;
-    const user = await UserModel.isUserExistByCustomID(userId);
+    const {role , id , iat} = decode;
+    const user = await UserModel.isUserExistByCustomID(id);
 
     if (!user) {
-      throw new AppError(status.NOT_FOUND, 'This user is not found !');
+      throw new AppError(status.NOT_FOUND, 'This user is not found !!!');
     }
     // checking if the user is already deleted
   
@@ -41,7 +44,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
     }
   
 
-    if(user.passwordChangedAt && User.isJWTIssuedBeforePasswordChanged(user.passwordChangedAt , iat as number)){
+    if(user.passwordChangedAt && UserModel.isJWTIssuedBeforePasswordChanged(user.passwordChangedAt , iat as number)){
 
       throw new AppError(status.UNAUTHORIZED, 'You are Not Authorized');
     }
@@ -50,7 +53,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
   
 
     if (requiredRoles && !requiredRoles.includes(role.toLowerCase())) {
-      throw new AppError(status.UNAUTHORIZED, 'You are Not Authorized');
+      throw new AppError(status.UNAUTHORIZED, 'You are Not Authorized!!');
     }
 
     req.user = decode as JwtPayload;
