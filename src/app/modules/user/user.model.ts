@@ -48,6 +48,10 @@ const userSchema = new Schema<IUser , UserModelType>(
       default: 'user',
     },
 
+    passwordChangedAt: {
+      type: Date,
+    },
+
     isActive: {
       type: Boolean,
       default: true,
