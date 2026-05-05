@@ -3,7 +3,7 @@
 import jwt, { JwtPayload, SignOptions } from 'jsonwebtoken';
 
 interface JwtPayloadType {
-  userId: string;
+  id: string;
   role: string;
 }
 

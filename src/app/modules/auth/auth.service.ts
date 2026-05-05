@@ -5,9 +5,10 @@ import status from "http-status";
 import AppError from "../../error/AppError";
 import { TLoginUser } from "./auth.interface";
 import { UserModel } from "../user/user.model";
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken';
 import config from "../../config";
 import bcrypt from 'bcrypt';
+import { createToken } from "./auth.utils";
 
 export const loginUser = async (payload: TLoginUser) => {
   const { id, password } = payload;
@@ -49,13 +50,17 @@ export const loginUser = async (payload: TLoginUser) => {
   };
 
   // 6. Generate tokens
-  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret!, {
-    expiresIn: "1m",
-  });
+ const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string
+  );
 
-  const refreshToken = jwt.sign(jwtPayload, config.jwt_access_secret!, {
-    expiresIn: "1m",
-  });
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in as string
+  );
 
 
  
@@ -73,8 +78,6 @@ const changePassword = async (
   // checking if the user is exist
   const user = await UserModel.isUserExistByCustomID(userData.id);
 
-  console.log("user 72" , user);
-
   if (!user) {
     throw new AppError(status.NOT_FOUND, 'This user is not found !');
   }
@@ -89,7 +92,6 @@ const changePassword = async (
   // checking if the user is blocked
 
   const userStatus = user?.isActive;
-  console.log("userStatus" , userStatus);
 
   if (!userStatus) {
     throw new AppError(status.FORBIDDEN, 'This user is blocked ! !');
