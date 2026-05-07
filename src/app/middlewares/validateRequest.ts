@@ -10,6 +10,7 @@ const validateRequest = (schema: ZodObject) => {
 
     const parsedData = await schema.parseAsync({
       body: req.body,
+      cookies : req.cookies,
     });
 
     req.body = parsedData.body; 

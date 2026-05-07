@@ -13,4 +13,18 @@ router.post('/login' , validateRequest(authValidation.loginValidationSchema), au
 
 router.post('/change-password' , auth(USER_ROLE.user , USER_ROLE.admin), validateRequest(authValidation.changePasswordValidationSchema) , authControllers.changePassword);
 
+router.post('/refresh-token' , validateRequest(authValidation.refreshTokenValidationSchema) , authControllers.refreshToken);
+
+router.post(
+  '/forget-password',
+  validateRequest(authValidation.forgetPasswordValidationSchema),
+  authControllers.forgetPassword,
+);
+
+router.post(
+  '/reset-password',
+  validateRequest(authValidation.resetPasswordValidationSchema),
+  authControllers.resetPassword,
+);
+
 export const authRouter = router;

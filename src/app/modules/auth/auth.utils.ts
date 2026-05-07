@@ -2,7 +2,7 @@
 /* eslint-disable prettier/prettier */
 import jwt, { JwtPayload, SignOptions } from 'jsonwebtoken';
 
-interface JwtPayloadType {
+interface JwtPayloadType  extends JwtPayload {
   id: string;
   role: string;
 }
@@ -22,6 +22,6 @@ export const createToken = (
 export const verifyToken = (
   token: string,
   secret: string
-): JwtPayload | string => {
-  return jwt.verify(token, secret);
+) : JwtPayloadType  => {
+  return jwt.verify(token, secret) as JwtPayloadType;
 };

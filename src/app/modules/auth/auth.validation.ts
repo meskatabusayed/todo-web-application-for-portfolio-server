@@ -40,8 +40,43 @@ const changePasswordValidationSchema = z.object({
     })
 })
 
+
+const refreshTokenValidationSchema = z.object({
+  cookies: z.object({
+    refreshToken: z
+      .string()
+      .min(1, { message: "Refresh token is required" }),
+  }),
+});
+
+export const forgetPasswordValidationSchema = z.object({
+  body: z.object({
+    id: z
+      .string()
+      .min(1, { message: "User id is required!" }),
+  }),
+});
+
+const resetPasswordValidationSchema = z.object({
+  body: z.object({
+    id: z
+      .string()
+      .min(1, { message: 'User id is required!' }),
+
+    newPassword: z
+      .string()
+      .min(1, { message: 'User password is required!' })
+      .min(8, { message: 'Password must be at least 8 characters long' })
+      .max(100, { message: 'Password cannot exceed 100 characters' }),
+  }),
+});
+
 export const authValidation = {
     loginValidationSchema,
     changePasswordValidationSchema,
+    refreshTokenValidationSchema,
+    forgetPasswordValidationSchema,
+    resetPasswordValidationSchema,
+
     
 }
